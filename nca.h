@@ -14,6 +14,7 @@
 
 #define MAGIC_NCA3 0x3341434E /* "NCA3" */
 #define MAGIC_NCA2 0x3241434E /* "NCA2" */
+#define MAGIC_NCA1 0x3141434E /* "NCA1" */
 #define MAGIC_NCA0 0x3041434E /* "NCA0" */
 
 typedef struct {
@@ -131,7 +132,7 @@ enum nca_version {
     NCAVERSION_UNKNOWN = 0,
     NCAVERSION_NCA0_BETA,
     NCAVERSION_NCA0,
-    /* NCAVERSION_NCA1, // Does this exist? */
+    NCAVERSION_NCA1,
     NCAVERSION_NCA2,
     NCAVERSION_NCA3
 };

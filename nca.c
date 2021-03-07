@@ -595,8 +595,10 @@ int nca_decrypt_header(nca_ctx_t *ctx) {
             ctx->is_decrypted = 1;
             if (ctx->header.magic == MAGIC_NCA3) {
                 ctx->format_version = NCAVERSION_NCA3;
+            } else if (ctx->header.magic == MAGIC_NCA2) {
+                 ctx->format_version = NCAVERSION_NCA2;
             } else {
-                ctx->format_version = NCAVERSION_NCA2;
+                ctx->format_version = NCAVERSION_NCA1;
             }
             return 1;
         }
@@ -616,8 +618,12 @@ int nca_decrypt_header(nca_ctx_t *ctx) {
         ctx->format_version = NCAVERSION_NCA3;
         aes_xts_decrypt(hdr_aes_ctx, &dec_header, &ctx->header, 0xC00, 0, 0x200);
         ctx->header = dec_header;
-    } else if (dec_header.magic == MAGIC_NCA2) {
-        ctx->format_version = NCAVERSION_NCA2;
+    } else if (dec_header.magic == MAGIC_NCA2 || dec_header.magic == MAGIC_NCA1) {
+        if(dec_header.magic == MAGIC_NCA1) {
+            ctx->format_version = NCAVERSION_NCA1;
+        } else {
+            ctx->format_version = NCAVERSION_NCA2;
+        }
         for (unsigned int i = 0; i < 4; i++) {
             if (dec_header.fs_headers[i]._0x148[0] != 0 || memcmp(dec_header.fs_headers[i]._0x148, dec_header.fs_headers[i]._0x148 + 1, 0xB7)) {
                 aes_xts_decrypt(hdr_aes_ctx, &dec_header.fs_headers[i], &ctx->header.fs_headers[i], 0x200, 0, 0x200);
