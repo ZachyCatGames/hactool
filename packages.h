@@ -85,6 +85,10 @@ typedef enum {
     PK11_SECTION_WB,
 } pk11_section_id_t;
 
+static inline uint32_t pk11_get_stage1_size(pk11_ctx_t *ctx) {
+    return ctx->is_modern ? sizeof(ctx->stage1.modern) : sizeof(ctx->stage1.legacy);
+}
+
 static inline int pk11_get_section_idx(pk11_ctx_t *ctx, pk11_section_id_t section_id) {
     if (ctx->metadata.version >= 0x07) {
         switch (section_id) {

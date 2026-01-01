@@ -247,14 +247,16 @@ void pk11_save(pk11_ctx_t *ctx) {
             save_buffer_to_directory_file(decrypted_bin, sizeof(ctx->mariko_oem_header) + ctx->mariko_oem_header.bl_size, dirpath, "Decrypted.bin");
             free(decrypted_bin);
         } else {
-            char *decrypted_bin = malloc(sizeof(ctx->stage1) + ctx->pk11_size);
+            const size_t stage1_size = pk11_get_stage1_size(ctx);
+            char *decrypted_bin = malloc(stage1_size + ctx->pk11_size);
             if (decrypted_bin == NULL) {
                 fprintf(stderr, "Failed to allocate buffer!\n");
                 exit(EXIT_FAILURE);
             }
-            memcpy(decrypted_bin, &ctx->stage1, sizeof(ctx->stage1));
-            memcpy(decrypted_bin + sizeof(ctx->stage1), ctx->pk11, ctx->pk11_size);
-            save_buffer_to_directory_file(decrypted_bin, sizeof(ctx->stage1) + ctx->pk11_size, dirpath, "Decrypted.bin");
+
+            memcpy(decrypted_bin, &ctx->stage1, stage1_size);
+            memcpy(decrypted_bin + stage1_size, ctx->pk11, ctx->pk11_size);
+            save_buffer_to_directory_file(decrypted_bin, stage1_size + ctx->pk11_size, dirpath, "Decrypted.bin");
             free(decrypted_bin);
         }
 
